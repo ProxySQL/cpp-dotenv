@@ -8,10 +8,14 @@
 
 
 using namespace std;
-using namespace dotenv;
 
 
-dotenv::dotenv& dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool overwrite, const bool interpolate)
+// Typedef to work around the fact that class name matches namespace name
+// This is a known C++ limitation when defining out-of-line members
+typedef class ::dotenv::dotenv Dotenv_Type;
+
+
+Dotenv_Type& ::dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool overwrite, const bool interpolate)
 {
     ifstream env_file;
     env_file.open(dotenv_path);
@@ -27,19 +31,17 @@ dotenv::dotenv& dotenv::dotenv::load_dotenv(const string& dotenv_path, const boo
 }
 
 
-const dotenv::dotenv::value_type dotenv::dotenv::operator[](const key_type& k) const
+auto ::dotenv::dotenv::operator[](const key_type& k) const -> const string
 {
     return getenv(k).second;
 }
 
 
-dotenv::dotenv& dotenv::dotenv::instance()
+Dotenv_Type& ::dotenv::dotenv::instance()
 {
     return _instance;
 }
 
 
-const string dotenv::dotenv::env_filename = ".env";
-dotenv::dotenv dotenv::dotenv::_instance;
-
-dotenv::dotenv& dotenv::env = dotenv::instance();
+// Static members are now inline in the header (C++17)
+::dotenv::dotenv& ::dotenv::env = ::dotenv::dotenv::instance();

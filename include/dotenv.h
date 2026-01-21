@@ -15,7 +15,7 @@ namespace dotenv
 
     public:
 
-        dotenv& load_dotenv(const std::string& dotenv_path = env_filename,
+        dotenv& load_dotenv(const std::string& dotenv_path = ".env",
                             const bool overwrite = false,
                             const bool interpolate = true);
 
@@ -28,7 +28,7 @@ namespace dotenv
         void operator=(const dotenv&) = delete;
 
         static dotenv& instance();
-    
+
     private:
 
         dotenv() = default;
@@ -42,4 +42,8 @@ namespace dotenv
 
 
     extern dotenv& env;
+
+    // Inline variables defined after class is complete (C++17)
+    inline const std::string dotenv::env_filename = ".env";
+    inline dotenv dotenv::_instance;
 }
