@@ -35,6 +35,16 @@ C++ implementation of NodeJS [dotenv](https://github.com/motdotla/dotenv) projec
 
 **NONE**, for sure! :sunglasses: If it had any, it wouldn't follow the basic dotenv principles. All the needed libraries are shipped with this repository right out of the box.
 
+### Build Requirements
+
+- **C++17** compatible compiler (Clang 17+, GCC 8+, MSVC 2017+)
+- **CMake** >= 3.16
+
+The library has been tested and is known to work on:
+- Linux (GCC, Clang)
+- macOS (Clang)
+- Windows (MSVC)
+
 ## Build
 
 Supported build methods are:
