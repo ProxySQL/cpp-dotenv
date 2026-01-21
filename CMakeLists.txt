@@ -21,6 +21,12 @@ if(BUILD_BOTH_LIBRARIES AND BUILD_SHARED_LIBS)
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 endif()
 
+# When building shared libraries that link against static libraries,
+# we need position-independent code for the static libraries
+if(BUILD_SHARED_LIBS OR BUILD_BOTH_LIBRARIES)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 #------------------- SUBDIRECTORY ADDITION ------------------------------------
 
 add_subdirectory(common)
@@ -53,6 +59,8 @@ if(BUILD_BOTH_LIBRARIES)
     )
     target_include_directories(cpp_dotenv_static PUBLIC ${CPP_DOTENV_INCLUDE_DIRS})
     target_compile_options(cpp_dotenv_static PRIVATE ${CPP_DOTENV_COMPILE_OPTIONS})
+    # Set output name to libcpp_dotenv.a (instead of libcpp_dotenv_static.a)
+    set_target_properties(cpp_dotenv_static PROPERTIES OUTPUT_NAME cpp_dotenv)
 
     # Shared library
     add_library(cpp_dotenv_shared SHARED ${CPP_DOTENV_SRC})
@@ -62,6 +70,8 @@ if(BUILD_BOTH_LIBRARIES)
     )
     target_include_directories(cpp_dotenv_shared PUBLIC ${CPP_DOTENV_INCLUDE_DIRS})
     target_compile_options(cpp_dotenv_shared PRIVATE ${CPP_DOTENV_COMPILE_OPTIONS})
+    # Set output name to libcpp_dotenv.so/.dylib (instead of libcpp_dotenv_shared.so)
+    set_target_properties(cpp_dotenv_shared PROPERTIES OUTPUT_NAME cpp_dotenv)
 
     # Alias for backward compatibility:
     # When BUILD_BOTH_LIBRARIES is ON, the cpp_dotenv target is an alias to
