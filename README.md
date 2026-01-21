@@ -39,11 +39,11 @@ C++ implementation of NodeJS [dotenv](https://github.com/motdotla/dotenv) projec
 
 Supported build methods are:
 
-- [CMake](#cmake) (>=3.10)
+- [CMake](#cmake) (>=3.16)
 
 ### CMake
 
-**cpp-dotenv** comes with support for `CMake` right out of the box. In order to use it, simply include this repository's directory and link the `cpp_dotenv` target to your own targets where needed:
+**cpp-dotenv** comes with support for `CMake` right out of the box (>=3.16). In order to use it, simply include this repository's directory and link the `cpp_dotenv` target to your own targets where needed:
 
 ```cmake
 add_subdirectory(cpp-dotenv)
@@ -54,6 +54,42 @@ target_link_libraries(YOUR_TARGET cpp_dotenv)
 ```
 
 After this, you might use the library as described in [usage](#usage); no extra scoping, no need to worry about the project's directory structure.
+
+#### Build Options
+
+By default, only one library target named `cpp_dotenv` is built. The type of library (static or shared) is controlled by CMake's standard `BUILD_SHARED_LIBS` option:
+
+```bash
+# Build static library (default)
+cmake -DBUILD_SHARED_LIBS=OFF ..
+
+# Build shared library
+cmake -DBUILD_SHARED_LIBS=ON ..
+```
+
+#### Building Both Static and Shared Libraries
+
+To build both static and shared libraries in a single build directory, use the `BUILD_BOTH_LIBRARIES` option:
+
+```bash
+cmake -DBUILD_BOTH_LIBRARIES=ON ..
+```
+
+This creates two separate library targets:
+- `cpp_dotenv_static` - outputs as `libcpp_dotenv.a`
+- `cpp_dotenv_shared` - outputs as `libcpp_dotenv.so` (or `.dylib` on macOS)
+
+For backward compatibility, the `cpp_dotenv` target remains available as an alias to `cpp_dotenv_static`. If you need to link against the shared library, explicitly specify `cpp_dotenv_shared`:
+
+```cmake
+# Link against static library (default)
+target_link_libraries(YOUR_TARGET cpp_dotenv)
+
+# Link against shared library
+target_link_libraries(YOUR_TARGET cpp_dotenv_shared)
+```
+
+**Note:** When `BUILD_BOTH_LIBRARIES` is enabled, `BUILD_SHARED_LIBS` is ignored. Do not use both options simultaneously.
 
 ## Usage
 
