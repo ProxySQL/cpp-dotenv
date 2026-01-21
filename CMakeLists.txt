@@ -15,6 +15,12 @@ message(STATUS "Building CPP-DOTENV in ${CMAKE_BUILD_TYPE} mode")
 # Option to build both static and shared libraries
 option(BUILD_BOTH_LIBRARIES "Build both static and shared libraries" OFF)
 
+# Validate that BUILD_BOTH_LIBRARIES and BUILD_SHARED_LIBS are not used together
+if(BUILD_BOTH_LIBRARIES AND BUILD_SHARED_LIBS)
+    message(WARNING "BUILD_BOTH_LIBRARIES and BUILD_SHARED_LIBS should not be used together. BUILD_SHARED_LIBS will be ignored.")
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+endif()
+
 #------------------- SUBDIRECTORY ADDITION ------------------------------------
 
 add_subdirectory(common)
@@ -57,7 +63,10 @@ if(BUILD_BOTH_LIBRARIES)
     target_include_directories(cpp_dotenv_shared PUBLIC ${CPP_DOTENV_INCLUDE_DIRS})
     target_compile_options(cpp_dotenv_shared PRIVATE ${CPP_DOTENV_COMPILE_OPTIONS})
 
-    # Alias for compatibility - default to static
+    # Alias for backward compatibility:
+    # When BUILD_BOTH_LIBRARIES is ON, the cpp_dotenv target is an alias to
+    # cpp_dotenv_static. Projects that need the shared library must explicitly
+    # link against cpp_dotenv_shared instead of cpp_dotenv.
     add_library(cpp_dotenv ALIAS cpp_dotenv_static)
 else()
     # Single library (type determined by BUILD_SHARED_LIBS)
