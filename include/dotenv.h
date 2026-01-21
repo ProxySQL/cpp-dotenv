@@ -36,6 +36,8 @@ namespace dotenv
     private:
 
         // Declare static members (definitions are inline after the class)
+        // NOTE: env_filename is kept for backward compatibility; external code
+        // may reference dotenv::dotenv::env_filename directly.
         static const std::string env_filename;
         static dotenv _instance;
 
