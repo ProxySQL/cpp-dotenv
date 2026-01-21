@@ -39,7 +39,7 @@ C++ implementation of NodeJS [dotenv](https://github.com/motdotla/dotenv) projec
 
 Supported build methods are:
 
-- [CMake](#cmake) (>=3.10)
+- [CMake](#cmake) (>=3.16)
 
 ### CMake
 

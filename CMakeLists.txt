@@ -72,6 +72,11 @@ if(BUILD_BOTH_LIBRARIES)
     target_compile_options(cpp_dotenv_shared PRIVATE ${CPP_DOTENV_COMPILE_OPTIONS})
     # Set output name to libcpp_dotenv.so/.dylib (instead of libcpp_dotenv_shared.so)
     set_target_properties(cpp_dotenv_shared PROPERTIES OUTPUT_NAME cpp_dotenv)
+    # On Windows (MSVC), the import library would conflict with the static library.
+    # Add a suffix to the import library name to avoid this conflict.
+    if(MSVC)
+        set_target_properties(cpp_dotenv_shared PROPERTIES IMPORT_SUFFIX "_shared.lib")
+    endif()
 
     # Alias for backward compatibility:
     # When BUILD_BOTH_LIBRARIES is ON, the cpp_dotenv target is an alias to
