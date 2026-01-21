@@ -35,15 +35,18 @@ namespace dotenv
 
     private:
 
+        // Declare static members (definitions are inline after the class)
         static const std::string env_filename;
         static dotenv _instance;
 
     };
 
 
-    extern dotenv& env;
-
-    // Inline variables defined after class is complete (C++17)
+    // C++17 inline variable definitions after class is complete
+    // Note: _instance cannot be inline inside the class due to incomplete type
     inline const std::string dotenv::env_filename = ".env";
     inline dotenv dotenv::_instance;
+
+
+    extern dotenv& env;
 }

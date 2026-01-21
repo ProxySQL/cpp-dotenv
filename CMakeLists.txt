@@ -42,11 +42,21 @@ set(CPP_DOTENV_SRC
 # Common include directories
 set(CPP_DOTENV_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# Common compile options
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-    set(CPP_DOTENV_COMPILE_OPTIONS -g -Wall -O0)
+# Common compile options - handle MSVC vs GCC/Clang
+if (MSVC)
+    # MSVC-specific flags
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+        set(CPP_DOTENV_COMPILE_OPTIONS /W4 /Od)
+    else()
+        set(CPP_DOTENV_COMPILE_OPTIONS /W4 /O2)
+    endif()
 else()
-    set(CPP_DOTENV_COMPILE_OPTIONS -O3)
+    # GCC/Clang and other compilers using Unix-style flags
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+        set(CPP_DOTENV_COMPILE_OPTIONS -g -Wall -O0)
+    else()
+        set(CPP_DOTENV_COMPILE_OPTIONS -O3)
+    endif()
 endif()
 
 # Build both static and shared libraries if requested
@@ -70,12 +80,14 @@ if(BUILD_BOTH_LIBRARIES)
     )
     target_include_directories(cpp_dotenv_shared PUBLIC ${CPP_DOTENV_INCLUDE_DIRS})
     target_compile_options(cpp_dotenv_shared PRIVATE ${CPP_DOTENV_COMPILE_OPTIONS})
-    # Set output name to libcpp_dotenv.so/.dylib (instead of libcpp_dotenv_shared.so)
-    set_target_properties(cpp_dotenv_shared PROPERTIES OUTPUT_NAME cpp_dotenv)
-    # On Windows (MSVC), the import library would conflict with the static library.
-    # Add a suffix to the import library name to avoid this conflict.
+    # Set output name. On non-MSVC platforms, both static and shared libraries use
+    # the same base name "cpp_dotenv". On MSVC, give the shared library a distinct
+    # base name to avoid conflicts between the static library (.lib) and the
+    # import library for the shared library (also .lib).
     if(MSVC)
-        set_target_properties(cpp_dotenv_shared PROPERTIES IMPORT_SUFFIX "_shared.lib")
+        set_target_properties(cpp_dotenv_shared PROPERTIES OUTPUT_NAME cpp_dotenv_shared)
+    else()
+        set_target_properties(cpp_dotenv_shared PROPERTIES OUTPUT_NAME cpp_dotenv)
     endif()
 
     # Alias for backward compatibility:

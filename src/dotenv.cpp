@@ -10,12 +10,12 @@
 using namespace std;
 
 
-// Typedef to work around the fact that class name matches namespace name
+// Type alias to work around the fact that class name matches namespace name
 // This is a known C++ limitation when defining out-of-line members
-typedef class ::dotenv::dotenv Dotenv_Type;
+typedef class ::dotenv::dotenv DotenvClass;
 
 
-Dotenv_Type& ::dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool overwrite, const bool interpolate)
+DotenvClass& ::dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool overwrite, const bool interpolate)
 {
     ifstream env_file;
     env_file.open(dotenv_path);
@@ -31,17 +31,17 @@ Dotenv_Type& ::dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool
 }
 
 
-auto ::dotenv::dotenv::operator[](const key_type& k) const -> const string
+const string DotenvClass::operator[](const key_type& k) const
 {
     return getenv(k).second;
 }
 
 
-Dotenv_Type& ::dotenv::dotenv::instance()
+DotenvClass& ::dotenv::dotenv::instance()
 {
     return _instance;
 }
 
 
-// Static members are now inline in the header (C++17)
+// Define the global 'env' reference. Static members are inline in the header (C++17).
 ::dotenv::dotenv& ::dotenv::env = ::dotenv::dotenv::instance();
