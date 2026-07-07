@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/adeharo9/cpp-dotenv/master/cpp-dotenv.png" alt="cpp-dotenv" align="right"/>
 
-![v1.0.0-alpha](https://img.shields.io/badge/version-v1.0.0--alpha-blue "v1.0.0-alpha")
+![v1.0.0-proxysql](https://img.shields.io/badge/version-v1.0.0-proxysql-blue "v1.0.0-proxysql")
 ![BSD 3-clause license](https://img.shields.io/badge/license-BSD%203--clause-green "BSD 3-clause license")
 
 Loads environment variables from `.env` files for C++ projects.
