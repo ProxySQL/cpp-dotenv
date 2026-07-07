@@ -17,6 +17,7 @@ typedef class ::dotenv::dotenv DotenvClass;
 
 DotenvClass& ::dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool overwrite, const bool interpolate)
 {
+    loaded = false;
     ifstream env_file;
     env_file.open(dotenv_path);
 
@@ -25,6 +26,7 @@ DotenvClass& ::dotenv::dotenv::load_dotenv(const string& dotenv_path, const bool
         Parser parser;
         parser.parse(env_file, overwrite, interpolate);
         env_file.close();
+        loaded = true;
     }
 
     return *this;

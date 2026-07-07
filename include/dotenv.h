@@ -29,6 +29,8 @@ namespace dotenv
 
         static dotenv& instance();
 
+        bool loaded = false;
+
     private:
 
         dotenv() = default;
